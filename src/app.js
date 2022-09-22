@@ -14,7 +14,7 @@ app.use(morgan("tiny"));
 // Router
 app.use("/api/v1", Router);
 app.get("/docs", (req, res) => {
-  res.redirect("");
+  res.redirect("https://documenter.getpostman.com/view/9978541/2s7ZE7JNvQ");
 });
 app.all("*", (req, res, next) => {
   const error = new Error(`Can't find ${req.originalUrl} on this server!`);
