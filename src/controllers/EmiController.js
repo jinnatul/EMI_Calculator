@@ -74,7 +74,7 @@ const calculateEMI = (
 ) => {
   // All EMI should be completed before 14 days of check-in
   let minEmiCount = parseInt((daysDiff - 14) / days);
-  console.log("cal emi count", minEmiCount);
+  console.log("calculate emi count", minEmiCount);
 
   if (no_of_emi > minEmiCount) {
     return notEligible(res);
@@ -83,14 +83,14 @@ const calculateEMI = (
   minEmiCount = Math.min(no_of_emi, minEmiCount);
   console.log("min emi count", minEmiCount);
 
-  const eachInstallment = +(amount / minEmiCount).toFixed(2);
+  let eachInstallment = +(amount / minEmiCount).toFixed(2);
   console.log("eachInstallment", eachInstallment);
   if (eachInstallment < 5) {
     return notEligible(res);
   }
 
   // special case
-  if (amount < 10) {
+  if (minEmiCount === 1 || amount < 10) {
     return SendData(res, {
       emi_available: true,
       data: [
@@ -114,12 +114,29 @@ const calculateEMI = (
   console.log("extraAmount", extraAmount);
 
   const data = [];
-  firstInstallment += +(
-    amount -
-    (eachInstallment * (minEmiCount - 1) + firstInstallment)
-  ).toFixed(2);
 
+  console.log("Before EmiCount", minEmiCount);
+  while (true) {
+    if (extraAmount / minEmiCount < 5) {
+      minEmiCount--;
+    } else {
+      break;
+    }
+  }
+
+  console.log("After EmiCount", minEmiCount);
+
+  if (no_of_emi > minEmiCount) {
+    return notEligible(res);
+  }
+
+  eachInstallment = +(extraAmount / (minEmiCount - 1)).toFixed(2);
+
+  let sumOfEachamount = 0;
   for (let i = 0; i < minEmiCount; i++) {
+    sumOfEachamount = +(
+      sumOfEachamount + (i === 0 ? firstInstallment : eachInstallment)
+    ).toFixed(2);
     data.push({
       emi_date:
         i === 0
@@ -130,6 +147,9 @@ const calculateEMI = (
       amount: i === 0 ? firstInstallment : eachInstallment,
     });
   }
+
+  data[0].amount += +(amount - sumOfEachamount).toFixed(2);
+  console.log(sumOfEachamount);
 
   return SendData(res, {
     emi_available: true,
