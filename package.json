@@ -1,0 +1,27 @@
+{
+  "name": "emi-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "env-cmd -f .env.development babel-node ./src/server.js",
+    "dev": "env-cmd -f .env.development nodemon ./src/server.js --exec babel-node"
+  },
+  "keywords": [],
+  "author": "Morol",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "cors": "^2.8.5",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.1",
+    "git-commit-msg-linter": "^3.2.8",
+    "joi": "^17.4.2",
+    "moment": "^2.29.4",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
