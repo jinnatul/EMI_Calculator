@@ -76,11 +76,15 @@ const calculateEMI = (
   let minEmiCount = parseInt((daysDiff - 14) / days);
   console.log("calculate emi count", minEmiCount);
 
-  if (no_of_emi > minEmiCount) {
+  // check no_of_emi exists or not
+  if (no_of_emi && no_of_emi > minEmiCount) {
     return notEligible(res);
   }
 
-  minEmiCount = Math.min(no_of_emi, minEmiCount);
+  // get minimum emi count
+  if (no_of_emi) {
+    minEmiCount = Math.min(no_of_emi, minEmiCount);
+  }
   console.log("min emi count", minEmiCount);
 
   let eachInstallment = +(amount / minEmiCount).toFixed(2);
@@ -116,6 +120,8 @@ const calculateEMI = (
   const data = [];
 
   console.log("Before EmiCount", minEmiCount);
+
+  // get min emi count that geater or equal 5
   while (true) {
     if (extraAmount / minEmiCount < 5) {
       minEmiCount--;
@@ -126,12 +132,15 @@ const calculateEMI = (
 
   console.log("After EmiCount", minEmiCount);
 
-  if (no_of_emi > minEmiCount) {
+  // check latest emi count geater then given emi count
+  if (no_of_emi && no_of_emi > minEmiCount) {
     return notEligible(res);
   }
 
+  // modifying each installment
   eachInstallment = +(extraAmount / (minEmiCount - 1)).toFixed(2);
 
+  // set installment by monthly
   let sumOfEachamount = 0;
   for (let i = 0; i < minEmiCount; i++) {
     sumOfEachamount = +(
@@ -148,6 +157,9 @@ const calculateEMI = (
     });
   }
 
+  /* add/substractio value from total amount (+- fraction value like given amount 10 and 
+    our sum value 9.99 or 10.01) then +- 0.01 from 1st installment
+  */
   data[0].amount += +(amount - sumOfEachamount).toFixed(2);
   console.log(sumOfEachamount);
 

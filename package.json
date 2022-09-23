@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "env-cmd -f .env.development babel-node ./src/server.js",
+    "start": "env-cmd -f .env.production babel-node ./src/server.js",
     "dev": "env-cmd -f .env.development nodemon ./src/server.js --exec babel-node"
   },
   "keywords": [],
